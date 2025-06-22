@@ -1,0 +1,13 @@
+replicaCount: 1
+
+image:
+  repository: kennethreitz/httpbin
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30081
+
+resources: {}
