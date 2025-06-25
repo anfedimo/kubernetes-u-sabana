@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: nequidev.azurecr.io/nequidev-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 9000
+  nodePort: 30081
+
+resources: {}
+
+imagePullSecrets:
+  - name: acr-secret
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  cpuAverageUtilization: 60

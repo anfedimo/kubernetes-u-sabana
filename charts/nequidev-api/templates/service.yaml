@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nequidev-api.fullname" . }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  ports:
+    - port: {{ .Values.service.port | default 9000 }}
+      targetPort: {{ .Values.service.targetPort | default 9000 }}
+  selector:
+    app: {{ include "nequidev-api.name" . }}

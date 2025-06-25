@@ -2,31 +2,124 @@
 
 Este Helm Chart despliega la aplicación `nequidev-api` en un clúster de Kubernetes, incluyendo configuración de servicio, almacenamiento persistente, y recolección de logs.
 
-## Estructura de Componentes
+## 📂 Funcionalidad específica de cada archivo del Helm Chart
 
-- **Chart.yaml**: Define el nombre del chart, versión y descripción.
-- **values.yaml**: Contiene los valores por defecto del despliegue, como nombre de imagen, puertos, recursos y configuración del volumen.
-- **deployment.yaml**: Manifiesto de Kubernetes que define el Deployment de la aplicación.
-- **service.yaml**: Expone la aplicación mediante un Service de tipo `ClusterIP`.
-- **persistentVolume.yaml**: Define un `PersistentVolume` para almacenamiento local.
-- **promtail.yaml**: Configura Promtail como DaemonSet para recolección de logs hacia Loki.
-- **_helpers.tpl**: Contiene plantillas auxiliares usadas en los manifiestos para nombramiento y etiquetas consistentes.
+- 📄 **Chart.yaml**	Metadatos básicos del Chart: nombre (nequidev-api), versión del Chart, y descripción breve.
+
+
+- 📄 **values.yaml**	Valores configurables del Chart: imagen Docker, réplicas, puertos, recursos asignados, variables de entorno y configuraciones específicas. 
+
+
+- 📄 **deployment.yaml**	Define cómo se despliega tu aplicación (Deployment) en Kubernetes. Especifica contenedores, puertos, réplicas, configuraciones y probes de salud.
+
+
+- 📄 **service.yaml**	Expone tu aplicación mediante un servicio interno (ClusterIP), haciendo accesible el servicio dentro del clúster Kubernetes.
+
+
+- 📄 **hpa.yaml**	Escalado automático horizontal (HorizontalPodAutoscaler) basado en consumo de CPU o memoria, para ajustar el número de pods según demanda.
+
+
+- 📄 **_helpers.tpl**	Plantillas auxiliares para nombrar recursos consistentemente y aplicar etiquetas estándar en todos los recursos generados por el Chart Helm.
+
+
+## 📑 Archivos de ArgoCD (dentro de la carpeta argocd)
+
+- 📄 **archivo-secret-github.yaml**	Guarda secretos en Kubernetes (token o clave SSH), permitiendo a ArgoCD acceder a repositorios privados GitHub.
+
+
+- 📄 **nequidev-argo-app.yaml**	Define la aplicación ArgoCD que apunta al repositorio de Helm Charts, permitiendo la gestión y despliegue continuo de la aplicación `nequidev-api`.
+
 
 ## Estructura del Chart
 
-    ```text
-    kubernetes-nequi/
-    ├── Chart.yaml
-    ├── values.yaml
-    └── templates/
-        ├── deployment.yaml
-        ├── service.yaml
-        ├── _helpers.tpl
-        └── (otros opcionales: ingress.yaml, configmap.yaml, secret.yaml, hpa.yaml)
-    ```
+```text
+kubernetes-nequi/
+├── argocd/
+│   ├── archivo-secret-github.yaml     # Credenciales para acceso al repo privado desde ArgoCD
+│   └── nequidev-argo-app.yaml         # Aplicación ArgoCD que apunta al Helm Chart
+│
+├── charts/
+│   └── nequidev-api/
+│       ├── Chart.yaml                 # Metadatos del Chart Helm
+│       ├── values.yaml                # Valores predeterminados del Chart
+│       └── templates/
+│           ├── _helpers.tpl           # Funciones auxiliares para plantillas
+│           ├── deployment.yaml        # Despliegue de la aplicación nequidev-api
+│           ├── service.yaml           # Servicio ClusterIP que expone la aplicación
+│           └── hpa.yaml               # Escalado automático basado en métricas
+│
+├── nequidev-api-deployment.yaml       # Archivo anterior (fuera del chart, probablemente legacy)
+├── persistentVolume.yaml              # Almacenamiento persistente (opcional, legacy)
+├── promtail.yaml                      # Recolección de logs (opcional, legacy)
+└── README.md                          # Documentación del Chart Helm
+```
 
-## Despliegue
+## 🚀 Flujo de Despliegue GitOps con ArgoCD y Helm
 
-    ```bash
-    helm install nequidev-api ./nequidev-api
-    ``` 
+1. Realizas un commit y push en el repositorio kubernetes-nequi.
+
+2. ArgoCD detecta automáticamente cambios en Git (gracias al archivo nequidev-argo-app.yaml).
+
+3. ArgoCD usa el Chart Helm ubicado en charts/nequidev-api.
+
+4. Se despliegan automáticamente los manifiestos (deployment.yaml, service.yaml, hpa.yaml) en Kubernetes.
+
+5. ArgoCD mantiene el despliegue sincronizado y reporta claramente su estado.
+
+
+## 🧑‍💻 Ejemplo de comandos útiles con tu estructura actual
+- Crea el namespace `api` si no existe.
+```bash
+kubectl create namespace api
+```
+- Para validar cambios (sincronización ArgoCD):
+```bash
+argocd app sync nequidev-api
+```
+
+- Para ver el estado de la aplicación en ArgoCD:
+```bash
+argocd app get nequidev-api
+```
+
+- Aplica el archivo de configuración de ArgoCD para crear el secreto que permite el acceso a tu repositorio privado de GitHub.
+```bash
+kubectl apply -f argocd/archivo-secret-github.yaml
+```
+- Aplica el archivo de configuración de ArgoCD para crear la aplicación que gestiona el despliegue del Helm chart `nequidev-api`.
+```bash
+kubectl apply -f argocd/nequidev-argo-app.yaml
+```
+
+- Instala el Helm chart `nequidev-api` en el clúster por primera vez.
+```bash
+helm install nequidev-api ./nequidev-api
+``` 
+
+- Actualiza el release `nequidev-api` en el namespace api con los últimos cambios del chart.
+```bash
+helm upgrade nequidev-api charts/nequidev-api -n api
+``` 
+
+- Reinicia el deployment para aplicar cambios recientes en la aplicación en el namespace `api`.
+```bash
+kubectl rollout restart deployment nequidev-api-kubernetes-nequi -n api
+``` 
+
+- Expone el servicio `nequidev-api-kubernetes-nequi` localmente en el puerto `9000` para acceso temporal.
+```bash
+kubectl port-forward svc/nequidev-api-kubernetes-nequi 9000:9000 -n api
+``` 
+
+
+## Esta estructura:
+
+Simplifica la gestión: Separación clara de recursos.
+
+Reduce errores humanos: Automatización GitOps.
+
+Aumenta seguridad y auditoría: Control completo vía Git.
+
+Permite fácil escalabilidad: Helm y HPA facilitan ajustes dinámicos.
+
+Es la mejor práctica actual para gestionar aplicaciones Kubernetes modernas con GitOps usando ArgoCD y Helm Charts.
