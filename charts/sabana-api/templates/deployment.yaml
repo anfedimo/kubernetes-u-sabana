@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nequidev-api.fullname" . }}
+  name: {{ include "sabana-api.fullname" . }}
   labels:
-    app: {{ include "nequidev-api.name" . }}
+    app: {{ include "sabana-api.name" . }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app: {{ include "nequidev-api.name" . }}
+      app: {{ include "sabana-api.name" . }}
   template:
     metadata:
       labels:
-        app: {{ include "nequidev-api.name" . }}
+        app: {{ include "sabana-api.name" . }}
     spec:
       imagePullSecrets:
         {{- toYaml .Values.imagePullSecrets | nindent 8 }}
       containers:
-        - name: nequidev-api
+        - name: sabana-api
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

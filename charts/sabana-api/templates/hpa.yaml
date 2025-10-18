@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "nequidev-api.fullname" . }}
+  name: {{ include "sabana-api.fullname" . }}
   labels:
-    {{- include "nequidev-api.labels" . | nindent 4 }}
+    {{- include "sabana-api.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "nequidev-api.fullname" . }}
+    name: {{ include "sabana-api.fullname" . }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:

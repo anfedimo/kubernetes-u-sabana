@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: nequidev.azurecr.io/nequidev-api
+  repository: sabana.azurecr.io/sabana-api
   tag: latest
   pullPolicy: IfNotPresent
 

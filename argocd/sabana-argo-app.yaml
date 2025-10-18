@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nequidev-api
+  name: sabana-api
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: 'https://github.com/anfedimo/kubernetes-nequi'
     targetRevision: main
-    path: charts/nequidev-api
+    path: charts/sabana-api
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: api
