@@ -33,7 +33,7 @@ Este Helm Chart despliega la aplicación `sabana-api` en un clúster de Kubernet
 ## Estructura del Chart
 
 ```text
-kubernetes-nequi/
+kubernetes-sabana/
 ├── argocd/
 │   ├── archivo-secret-github.yaml     # Credenciales para acceso al repo privado desde ArgoCD
 │   └── sabana-argo-app.yaml         # Aplicación ArgoCD que apunta al Helm Chart
@@ -56,7 +56,7 @@ kubernetes-nequi/
 
 ## 🚀 Flujo de Despliegue GitOps con ArgoCD y Helm
 
-1. Realizas un commit y push en el repositorio kubernetes-nequi.
+1. Realizas un commit y push en el repositorio kubernetes-sabana.
 
 2. ArgoCD detecta automáticamente cambios en Git (gracias al archivo sabana-argo-app.yaml).
 
@@ -103,12 +103,12 @@ helm upgrade sabana-api charts/sabana-api -n api
 
 - Reinicia el deployment para aplicar cambios recientes en la aplicación en el namespace `api`.
 ```bash
-kubectl rollout restart deployment sabana-api-kubernetes-nequi -n api
+kubectl rollout restart deployment sabana-api-kubernetes-sabana -n api
 ``` 
 
-- Expone el servicio `sabana-api-kubernetes-nequi` localmente en el puerto `9000` para acceso temporal.
+- Expone el servicio `sabana-api-kubernetes-sabana` localmente en el puerto `9000` para acceso temporal.
 ```bash
-kubectl port-forward svc/sabana-api-kubernetes-nequi 9000:9000 -n api
+kubectl port-forward svc/sabana-api-kubernetes-sabana 9000:9000 -n api
 ``` 
 
 

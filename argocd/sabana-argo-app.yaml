@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/anfedimo/kubernetes-nequi'
+    repoURL: 'https://github.com/anfedimo/kubernetes-sabana'
     targetRevision: main
     path: charts/sabana-api
   destination:
