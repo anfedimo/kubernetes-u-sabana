@@ -1,14 +1,14 @@
 replicaCount: 1
 
 image:
-  repository: sabana.azurecr.io/sabana-api
-  tag: latest
+  repository: anfedimo/sabana-api
   pullPolicy: IfNotPresent
+  tag: "latest"
 
 service:
   type: NodePort
-  port: 9000
-  nodePort: 30081
+  port: 80
+  targetPort: 9000
 
 resources: {}
 
