@@ -122,4 +122,7 @@ Aumenta seguridad y auditoría: Control completo vía Git.
 
 Permite fácil escalabilidad: Helm y HPA facilitan ajustes dinámicos.
 
+
 Es la mejor práctica actual para gestionar aplicaciones Kubernetes modernas con GitOps usando ArgoCD y Helm Charts.
+
+# Arquitectura de Software — Universidad de La Sabana — Grupo 14 — 2025
