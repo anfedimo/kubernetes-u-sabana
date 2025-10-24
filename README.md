@@ -35,7 +35,6 @@ Este Helm Chart despliega la aplicación `sabana-api` en un clúster de Kubernet
 ```text
 kubernetes-sabana/
 ├── argocd/
-│   ├── archivo-secret-github.yaml     # Credenciales para acceso al repo privado desde ArgoCD
 │   └── sabana-argo-app.yaml         # Aplicación ArgoCD que apunta al Helm Chart
 │
 ├── charts/
@@ -48,9 +47,6 @@ kubernetes-sabana/
 │           ├── service.yaml           # Servicio ClusterIP que expone la aplicación
 │           └── hpa.yaml               # Escalado automático basado en métricas
 │
-├── sabana-api-deployment.yaml       # Archivo anterior (fuera del chart, probablemente legacy)
-├── persistentVolume.yaml              # Almacenamiento persistente (opcional, legacy)
-├── promtail.yaml                      # Recolección de logs (opcional, legacy)
 └── README.md                          # Documentación del Chart Helm
 ```
 
@@ -126,3 +122,4 @@ Permite fácil escalabilidad: Helm y HPA facilitan ajustes dinámicos.
 Es la mejor práctica actual para gestionar aplicaciones Kubernetes modernas con GitOps usando ArgoCD y Helm Charts.
 
 # Arquitectura de Software — Universidad de La Sabana — Grupo 14 — 2025
+
