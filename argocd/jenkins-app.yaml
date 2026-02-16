@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins-infra
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.jenkins.io' # Repositorio oficial de Helm
+    targetRevision: 5.1.1                # Versión que instalaste
+    chart: jenkins
+    helm:
+      values: |
+        controller:
+          serviceType: NodePort
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: jenkins
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
