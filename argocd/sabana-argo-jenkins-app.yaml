@@ -6,13 +6,10 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://charts.jenkins.io' # Repositorio oficial de Helm
-    targetRevision: 5.1.1                # Versión que instalaste
-    chart: jenkins
-    helm:
-      values: |
-        controller:
-          serviceType: NodePort
+    # AHORA SÍ: Apuntamos a tu repositorio personal
+    repoURL: 'https://github.com/anfedimo/kubernetes-u-sabana'
+    targetRevision: main
+    path: charts/jenkins # Ruta donde guardaremos la configuración local
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: jenkins
