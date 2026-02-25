@@ -6,10 +6,13 @@ metadata:
 spec:
   project: default
   source:
-    # AHORA SÍ: Apuntamos a tu repositorio personal
-    repoURL: 'https://github.com/anfedimo/kubernetes-u-sabana'
-    targetRevision: main
-    path: charts/jenkins # Ruta donde guardaremos la configuración local
+    repoURL: 'https://charts.jenkins.io'
+    targetRevision: 5.8.14
+    chart: jenkins
+    helm:
+      values: |
+        controller:
+          serviceType: ClusterIP
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: jenkins
@@ -17,3 +20,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
