@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: anfedimo/devops-dev-sabana-backend
   pullPolicy: IfNotPresent
-  tag: "5"
+  tag: "6"
 
 service:
   type: NodePort
