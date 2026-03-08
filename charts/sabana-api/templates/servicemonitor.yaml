@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "sabana-api.fullname" . }}-monitor
+  labels:
+    {{- include "sabana-api.labels" . | nindent 4 }}
+    release: prometheus-stack 
+spec:
+  selector:
+    matchLabels:
+      {{- include "sabana-api.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
