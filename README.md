@@ -18,9 +18,19 @@ Este Helm Chart despliega la aplicación `sabana-api` en un clúster de Kubernet
 
 - 📄 **hpa.yaml**	Escalado automático horizontal (HorizontalPodAutoscaler) basado en consumo de CPU o memoria, para ajustar el número de pods según demanda.
 
+- 📄 **servicemonitor.yaml** **(Monitoreo)** Define el recurso CustomResourceDefinition (CRD) que instruye al Prometheus Operator para descubrir y recolectar (scrape) automáticamente las métricas expuestas por la API.
 
 - 📄 **_helpers.tpl**	Plantillas auxiliares para nombrar recursos consistentemente y aplicar etiquetas estándar en todos los recursos generados por el Chart Helm.
 
+## 📑 Archivos de ArgoCD (dentro de la carpeta argocd)
+
+- 📄 **archivo-secret-github.yaml** Guarda secretos en Kubernetes (token o clave SSH), permitiendo a ArgoCD acceder a repositorios privados en GitHub.
+
+- 📄 **sabana-argo-app.yaml** Define la aplicación ArgoCD que apunta al repositorio de Helm Charts, permitiendo la gestión y despliegue continuo de la aplicación `sabana-api`.
+
+- 📄 **sabana-argo-monitoring-app.yaml** **(Monitoreo)** Define la aplicación ArgoCD encargada de instalar y sincronizar el chart oficial `kube-prometheus-stack`, aprovisionando Prometheus, Grafana y Alertmanager en el clúster.
+
+- 📄 **sabana-argo-jenkins-app.yaml** **(CI/CD)** Define la aplicación ArgoCD para aprovisionar el motor de integración y entrega continua (Jenkins) en el clúster.
 
 ## 📑 Archivos de ArgoCD (dentro de la carpeta argocd)
 
@@ -35,19 +45,23 @@ Este Helm Chart despliega la aplicación `sabana-api` en un clúster de Kubernet
 ```text
 kubernetes-sabana/
 ├── argocd/
-│   └── sabana-argo-app.yaml         # Aplicación ArgoCD que apunta al Helm Chart
+│   ├── archivo-secret-github.yaml       # Credenciales de acceso para ArgoCD
+│   ├── sabana-argo-app.yaml             # Aplicación ArgoCD para la API
+│   ├── sabana-argo-jenkins-app.yaml     # Aplicación ArgoCD para Jenkins (CD)
+│   └── sabana-argo-monitoring-app.yaml  # Aplicación ArgoCD para Prometheus y Grafana
 │
 ├── charts/
 │   └── sabana-api/
-│       ├── Chart.yaml                 # Metadatos del Chart Helm
-│       ├── values.yaml                # Valores predeterminados del Chart
+│       ├── Chart.yaml                   # Metadatos del Chart Helm
+│       ├── values.yaml                  # Valores predeterminados del Chart
 │       └── templates/
-│           ├── _helpers.tpl           # Funciones auxiliares para plantillas
-│           ├── deployment.yaml        # Despliegue de la aplicación sabana-api
-│           ├── service.yaml           # Servicio ClusterIP que expone la aplicación
-│           └── hpa.yaml               # Escalado automático basado en métricas
+│           ├── _helpers.tpl             # Funciones auxiliares para plantillas
+│           ├── deployment.yaml          # Despliegue de la aplicación sabana-api
+│           ├── hpa.yaml                 # Escalado automático basado en métricas
+│           ├── service.yaml             # Servicio que expone la aplicación
+│           └── servicemonitor.yaml      # Integración de métricas con Prometheus
 │
-└── README.md                          # Documentación del Chart Helm
+└── README.md                            # Documentación de la Arquitectura
 ```
 
 ## 🚀 Flujo de Despliegue GitOps con ArgoCD y Helm
